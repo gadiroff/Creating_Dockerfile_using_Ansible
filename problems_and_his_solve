@@ -1,0 +1,9 @@
+Problem: elasticsearch.service do not start
+
+Solving: 
+
+1. add "discovery.type: single-node" to file /etc/elasticsearch/elasticsearch.yml
+
+2. increase -Xms & -Xmx to 2g in file /etc/elasticsearch/jvm.options
+
+3. add "vm.max_map_count=262144" to file /etc/sysctl.conf and then run "sysctl -p" command .. 

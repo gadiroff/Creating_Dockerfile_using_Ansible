@@ -1,0 +1,68 @@
+---
+# Installing Kibana
+
+- name: Install Kibana with apt
+  apt:
+   name: kibana
+   update_cache: yes
+ 
+
+- name: Updating the config file to allow outside access
+  lineinfile:
+   destfile: /etc/kibana/kibana.yml
+   regexp: 'server.host:'
+   line: 'server.host: 0.0.0.0'
+
+- name: Defining server port
+  lineinfile:
+   destfile: /etc/kibana/kibana.yml
+   regexp: 'server.port:'
+   line: 'server.port: 5601'
+    
+- name: Defining Elasticsearch URL
+  lineinfile:
+   destfile: /etc/kibana/kibana.yml
+   regexp: 'elasticsearch.url:'
+   line: 'elasticsearch.url: "http://localhost:9200"'
+   
+
+- name: Starting Kibana
+  service:
+   name: kibana
+   state: started
+
+- name: Copy files ..
+  copy:
+          src: jvm.options
+          dest: /etc/elasticsearch/jvm.options
+
+- name: Copy files ..
+  copy:
+          src: elasticsearch.yml
+          dest: /etc/elasticsearch/elasticsearch.yml
+
+- name: Copy files ..
+  copy:
+          src: sysctl.conf
+          dest: /etc/sysctl.conf
+
+- name: Execute command ..
+  shell: sysctl -p
+
+- name: Start Services ..
+  service:
+          name: "{{ item }}"
+          state: started
+  with_items:
+        - kibana
+        - elasticsearch        
+
+- name: REstart Services ..
+  service:
+          name: "{{ item }}"    
+          state: restarted
+  with_items:        
+        - kibana
+        - elasticsearch
+          
+          

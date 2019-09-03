@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  gather_facts: false
+  become: yes
+  become_user: root
+  roles:
+  - { role: java }
+  - { role: elasticsearch }
+  - { role: kibana }
+  - { role: filebeat }
+

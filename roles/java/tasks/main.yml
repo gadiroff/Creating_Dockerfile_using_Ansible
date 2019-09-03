@@ -1,0 +1,28 @@
+
+---
+  
+# Install Java 
+
+- name: Install Java 8
+  apt:
+   name: openjdk-8-jdk
+   state: present
+   update_cache: yes
+
+
+- name: Copy environment variables to remote host
+  lineinfile: 
+      path: /etc/profile
+      line: "export {{ item }}\n "
+  with_items:    
+          - "{{ javahome }}"
+          -  "{{ path }}"
+  register: result
+- debug:
+        var: result
+
+
+- name: Source bashrc file
+  shell: source /etc/profile
+  args:
+     executable: /bin/bash   
